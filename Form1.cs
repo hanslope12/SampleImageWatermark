@@ -14,7 +14,8 @@ namespace SampleImageWatermark
         Graphics graphic;
         private void Disable_Buttons()
         {
-            if (pictureBox1 != null)
+            //disables buttons so user can't adjust stuff without putting image
+            if (pictureBox1 != null && waterMark !="")
             {
                 TopLeftButton.Enabled = true;
                 TopMiddleButton.Enabled = true;
@@ -26,17 +27,33 @@ namespace SampleImageWatermark
             }
         }
 
+        private float TextSize()
+        {
+            //This is the font for your watermark
+            int countOfChar = waterMark.Length;
+            int size = (img.Width / 2 + img.Height / 2) / countOfChar;
+            Font myFont = new Font("Arial", size, FontStyle.Bold, GraphicsUnit.Pixel);
+            SolidBrush brush = new SolidBrush(Color.White);
+
+            //This gets the size of the graphic
+
+            SizeF textSize = graphic.MeasureString(waterMark, myFont);
+            return textSize.Height;
+        }
         private void Write_WaterMark(float x, float y, int g)
         {
+            //gets the image from stream
             img = Image.FromStream(new MemoryStream(File.ReadAllBytes(imageLocation)));
             Bitmap indexedImage = new Bitmap(img);
 
+            //draws image
             graphic = Graphics.FromImage(indexedImage);
             graphic.DrawImage(img, 0, 0, img.Width, img.Height);
             img = indexedImage;
             img2 = img;
             pictureBox2.Image = img2;
             graphic.SmoothingMode = SmoothingMode.AntiAlias & SmoothingMode.HighQuality;
+
             //This is the font for your watermark
             int countOfChar = waterMark.Length;
             int size = (img.Width / 2 + img.Height / 2) / countOfChar;
@@ -98,65 +115,79 @@ namespace SampleImageWatermark
 
         private void Save_Click(object sender, EventArgs e)
         {
+              //Over writes the file on the location to be able to save again.
               File.Delete(imageLocation);
               img2.Save(imageLocation, ImageFormat.Jpeg);
-              img2.Dispose();
-              img.Dispose();
               MessageBox.Show("Picture has been saved", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void TopLeftButton_Click(object sender, EventArgs e)
         {
-            Write_WaterMark(0, 0,1);
+            if (waterMark != "")
+            {
+                Write_WaterMark(0, 0, 1);
+            }
+            else
+            {
+                MessageBox.Show("Input Watermark", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void TopMiddleButton_Click(object sender, EventArgs e)
         {
-
-            var x = (img.Width/2);
-            Write_WaterMark(x, 0,2);
+            if (waterMark != "")
+            {
+                var x = (img.Width / 2);
+                Write_WaterMark(x, 0, 2);
+            }
+            else
+            {
+                MessageBox.Show("Input Watermark", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
         }
 
         private void TopRightButton_Click(object sender, EventArgs e)
         {
+            if (waterMark != "")
+            {
+                var x = (img.Width);
+                Write_WaterMark(x, 0, 3);
+            }
+            else
+            {
+                MessageBox.Show("Input Watermark", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
-            var x = (img.Width);
-            Write_WaterMark(x, 0,3);
         }
 
         private void BottomLeftButton_Click(object sender, EventArgs e)
         {
+            if (waterMark != "")
+            {
+                var y = (img.Height - TextSize());
+                Write_WaterMark(0, y, 1);
+            }
+            else
+            {
+                MessageBox.Show("Input Watermark", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
            
-            //This is the font for your watermark
-            int countOfChar = waterMark.Length;
-            int size = (img.Width / 2 + img.Height / 2) / countOfChar;
-            Font myFont = new Font("Arial", size, FontStyle.Bold, GraphicsUnit.Pixel);
-            SolidBrush brush = new SolidBrush(Color.White);
-
-            //This gets the size of the graphic
-
-            SizeF textSize = graphic.MeasureString(waterMark, myFont);
-            // Code for writing text on the image and showing its postion on images.
-            var y = (img.Height - textSize.Height);
-            Write_WaterMark(0, y,1);
         }
 
         private void BottomMiddleButton_Click(object sender, EventArgs e)
         {
-            
-            //This is the font for your watermark
-            int countOfChar = waterMark.Length;
-            int size = (img.Width / 2 + img.Height / 2) / countOfChar;
-            Font myFont = new Font("Arial", size, FontStyle.Bold, GraphicsUnit.Pixel);
-            SolidBrush brush = new SolidBrush(Color.White);
-
-            //This gets the size of the graphic
-
-            SizeF textSize = graphic.MeasureString(waterMark, myFont);
-            // Code for writing text on the image and showing its postion on images.
-            var x = (img.Width/2);
-            var y = (img.Height - textSize.Height);
-            Write_WaterMark(x, y,2);
+            if(waterMark !="")
+            {
+                var x = (img.Width / 2);
+                var y = (img.Height - TextSize());
+                Write_WaterMark(x, y, 2);
+            }
+            else
+            {
+                MessageBox.Show("Input Watermark", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void WaterMarkText_TextChanged(object sender, EventArgs e)
@@ -167,19 +198,16 @@ namespace SampleImageWatermark
 
         private void BottomRightButton_Click(object sender, EventArgs e)
         {
-            //This is the font for your watermark
-            int countOfChar = waterMark.Length;
-            int size = (img.Width / 2 + img.Height / 2) / countOfChar;
-            Font myFont = new Font("Arial", size, FontStyle.Bold, GraphicsUnit.Pixel);
-            SolidBrush brush = new SolidBrush(Color.White);
-
-            //This gets the size of the graphic
-
-            SizeF textSize = graphic.MeasureString(waterMark, myFont);
-            // Code for writing text on the image and showing its postion on images.
-            var x = (img.Width);
-            var y = (img.Height - textSize.Height);
-            Write_WaterMark(x, y, 3);
+            if (waterMark != "")
+            {
+                var x = (img.Width);
+                var y = (img.Height - TextSize());
+                Write_WaterMark(x, y, 3);
+            }
+            else
+            {
+                MessageBox.Show("Input Watermark", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
