@@ -209,8 +209,5 @@ namespace SampleImageWatermark
                 MessageBox.Show("Input Watermark", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
     }
-
 }
