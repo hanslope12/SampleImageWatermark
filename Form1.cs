@@ -9,7 +9,7 @@ namespace SampleImageWatermark
             InitializeComponent();
         }
         string imageLocation = "";
-        string waterMark = " ";
+        string waterMark = "";
         Image img, img2;
         Graphics graphic;
         private void Disable_Buttons()
@@ -102,6 +102,7 @@ namespace SampleImageWatermark
               img2.Save(imageLocation, ImageFormat.Jpeg);
               img2.Dispose();
               img.Dispose();
+              MessageBox.Show("Picture has been saved", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void TopLeftButton_Click(object sender, EventArgs e)
@@ -161,6 +162,7 @@ namespace SampleImageWatermark
         private void WaterMarkText_TextChanged(object sender, EventArgs e)
         {
             waterMark = WaterMarkText.Text;
+            Disable_Buttons();
         }
 
         private void BottomRightButton_Click(object sender, EventArgs e)
